@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Typing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="start-page">
+    <div class="Name"></div>
+    <div class="Button">
+        <button class="Host"></button>
+        <button class="Join"> </button>
+    </div>
+</body>
+<script>
+
+    document.querySelector(".Host").addEventListener("click", () => {
+        window.location.href = "host.html";
+    });
+
+    document.querySelector(".Join").addEventListener("click", () => {
+        window.location.href = "join.html";
+    });
+
+    window.addEventListener("load", () => {
+        document.body.classList.add("fade-slide-in");
+    });
+</script>
+
+</html>

@@ -1,0 +1,274 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+.roboto {
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #111;
+    overflow: hidden;
+}
+
+.game-frame {
+    width: 1024px;
+    height: 768px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    overflow: hidden;
+    transform: scale(calc(min(100vw / 1024, 100vh / 768)));
+    transform-origin: center center;
+}
+
+
+
+
+.start-page {
+    opacity: 0;
+    transform: translateX(80px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.start-page.fade-slide-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.start-page {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    background-image: url("./Image/bg2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+
+
+.Name {
+    background-image: url("./Image/gameLogo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 600px;
+    height: 400px;
+    margin-bottom: 40px;
+}
+
+.Button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Button .Host {
+    width: 400px;
+    height: 140px;
+    background-image: url("./Image/Host.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s;
+}
+
+
+.Button .Host:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+.Button .Join {
+    width: 400px;
+    height: 140px;
+    background-image: url("./Image/Join.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s;
+}
+
+.Button .Join:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+/* ===============================Host=============================== */
+
+.host-page {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    background-image: url("./Image/bg2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    grid-template-rows: 2.5fr 0.7fr 0.8fr;
+    gap: 0;
+    width: 1024px;
+    height: 768px;
+}
+
+.PlayerList {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    width: 100%;
+    height: 100%;
+    background-image: url("./Image/boardPlayer.png");
+    background-size: 1000px 700px;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.StartGame {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.StartGame button{
+    width: 150px;
+    height: 75px;
+    margin: 20px;
+    background-size: 800px 450px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    border: none;
+    outline: none;
+}
+.StartGame button:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+.MIN1{
+    background-image: url("./Image/Time/1min.png");
+}   
+.MIN3{
+    background-image: url("./Image/Time/3min.png");
+}
+.MIN5{
+    background-image: url("./Image/Time/5min.png");
+}
+
+
+.Avatar {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+    justify-items: center;
+    align-items: center;
+    padding: 20px;}
+
+.Avatar button {
+    width: 200px;   
+    height: 200px;
+    background-size: 1000px 800px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    border: none;
+    outline: none;
+}
+
+.Avatar button:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+.Avatar button.selected {
+    transform: scale(1.2);
+    filter: brightness(1.4) drop-shadow(0 0 10px yellow);
+}
+
+.Avatar1{
+    background-image: url("./Image/Avatar/avatar1.png");
+}
+.Avatar2{
+    background-image: url("./Image/Avatar/avatar2.png");
+}
+.Avatar3{
+    background-image: url("./Image/Avatar/avatar3.png");
+}
+.Avatar4{
+    background-image: url("./Image/Avatar/avatar4.png");
+}
+.Avatar5{
+    background-image: url("./Image/Avatar/avatar5.png");
+}
+.Avatar6{
+    background-image: url("./Image/Avatar/avatar6.png");
+}
+
+.InputName {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.InputName input {
+    width: 200px;
+    height: 100px;
+    font-size: 20px;
+    text-align: center;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    background-image: url("./Image/namePlayer.png");
+    background-size: 600px 500px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    font-weight: bold;
+}
