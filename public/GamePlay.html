@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body class="gamePlay-page">
+    <div id="stage"></div>
+    <script>
+        const animals = ["pig", "goose", "wolf", "chick"];
+        const stage = document.getElementById("stage");
+        const SAFE_TOP_MIN = 150;
+        const SAFE_TOP_MAX = window.innerHeight - 220;
+        function spawnAnimal() {
+            for (let i = 0; i < 2; i++) {
+                const animal = document.createElement("div");
+                const type = animals[Math.floor(Math.random() * animals.length)];
+                animal.classList.add("animal", type);
+                const y = Math.random() * (SAFE_TOP_MAX - SAFE_TOP_MIN) + SAFE_TOP_MIN;
+                animal.style.top = `${y}px`;
+                const goRight = Math.random() < 0.5;
+                let x = goRight ? -80 : window.innerWidth + 80;
+                const speed = goRight ? 0.6 : -0.6;
+
+                animal.style.left = `${x}px`;
+                animal.style.animation = `walk 0.8s steps(4) infinite`;
+                if (!goRight) {
+                    animal.style.transform = "scaleX(-1)";
+                }
+                stage.appendChild(animal);
+                function move() {
+                    x += speed;
+                    animal.style.left = `${x}px`;
+                    if ((goRight && x > window.innerWidth + 100) || (!goRight && x < -100)) {
+                        animal.remove();
+                    } else {
+                        requestAnimationFrame(move);
+                    }
+                }
+
+                requestAnimationFrame(move);
+            }
+        }
+
+        setInterval(spawnAnimal, 2000);
+    </script>
+</body>
+
+</html>

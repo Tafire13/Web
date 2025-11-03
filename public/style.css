@@ -144,7 +144,7 @@ body {
     grid-row: 1 / 2;
     width: 100%;
     height: 100%;
-    background-image: url("./Image/boardPlayer.png");
+    background-image: url("../public/Image/boardPlayer.png");
     background-size: 1000px 700px;
     background-position: center;
     background-repeat: no-repeat;
@@ -185,15 +185,15 @@ body {
 }
 
 .MIN1 {
-    background-image: url("./Image/Time/1min.png");
+    background-image: url("../public/Image/Time/1min.png");
 }
 
 .MIN3 {
-    background-image: url("./Image/Time/3min.png");
+    background-image: url("../public/Image/Time/3min.png");
 }
 
 .MIN5 {
-    background-image: url("./Image/Time/5min.png");
+    background-image: url("../public/Image/Time/5min.png");
 }
 
 
@@ -233,27 +233,27 @@ body {
 }
 
 .Avatar1 {
-    background-image: url("./Image/Avatar/avatar1.png");
+    background-image: url("../public/Image/Avatar/avatar1.png");
 }
 
 .Avatar2 {
-    background-image: url("./Image/Avatar/avatar2.png");
+    background-image: url("../public/Image/Avatar/avatar2.png");
 }
 
 .Avatar3 {
-    background-image: url("./Image/Avatar/avatar3.png");
+    background-image: url("../public/Image/Avatar/avatar3.png");
 }
 
 .Avatar4 {
-    background-image: url("./Image/Avatar/avatar4.png");
+    background-image: url("../public/Image/Avatar/avatar4.png");
 }
 
 .Avatar5 {
-    background-image: url("./Image/Avatar/avatar5.png");
+    background-image: url("../public/Image/Avatar/avatar5.png");
 }
 
 .Avatar6 {
-    background-image: url("./Image/Avatar/avatar6.png");
+    background-image: url("../public/Image/Avatar/avatar6.png");
 }
 
 .InputName {
@@ -335,3 +335,75 @@ body {
 }
 
 /* ===================================GamePlay==================================== */
+.gamePlay-page {
+    background-image: url("./Image/BackGround.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+#stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.animal {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background-repeat: no-repeat;
+    background-size: 192px 48px;
+    image-rendering: pixelated;
+    will-change: transform, background-position;
+    transform: translateX(-100px);
+}
+
+@keyframes walk {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -192px 0;
+    }
+}
+
+@keyframes moveRight {
+    from {
+        transform: translateX(0) scaleX(1);
+    }
+
+    to {
+        transform: translateX(120vw) scaleX(1);
+    }
+}
+
+@keyframes moveLeft {
+    from {
+        transform: translateX(0) scaleX(-1);
+    }
+
+    to {
+        transform: translateX(-120vw) scaleX(-1);
+    }
+}
+
+.animal.left {
+    transform: scaleX(-1);
+}
+
+.pig {
+    background-image: url("../public/Image/Animal/DaintyPig.png");
+}
+
+.goose {
+    background-image: url("../public/Image/Animal/HonkingGoose.png");
+}
+
+.wolf {
+    background-image: url("../public/Image/Animal/TimberWolf.png");
+}
+
+.chick {
+    background-image: url("../public/Image/Animal/TinyChick.png");
+}
