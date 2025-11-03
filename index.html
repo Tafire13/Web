@@ -9,10 +9,13 @@
 </head>
 
 <body class="start-page">
-    <div class="Name"></div>
-    <div class="Button">
-        <button class="Host"></button>
-        <button class="Join"> </button>
+    <div class="background"></div>
+    <div class="content">
+        <div class="Name"></div>
+        <div class="Button">
+            <button class="Host"></button>
+            <button class="Join"></button>
+        </div>
     </div>
 </body>
 <script>
@@ -26,7 +29,7 @@
     });
 
     window.addEventListener("load", () => {
-        document.body.classList.add("fade-slide-in");
+        document.querySelector(".content").classList.add("fade-slide-in");
     });
 </script>
 

@@ -12,7 +12,7 @@
 <body class="host-page">
     <div class="game-frame">
         <div class="container">
-            <div class="PlayerList"></div>
+            <div class="PlayerList" id="playerList"></div>
             <div class="Avatar">
                 <button class="Avatar1"></button>
                 <button class="Avatar2"></button>
@@ -32,5 +32,29 @@
         </div>
     </div>
 </body>
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const playerList = document.getElementById("playerList");
+        const playerNameInput = document.getElementById("playerName");
+
+        const playerBox = document.createElement("div");
+        playerBox.classList.add("player-box");
+
+        const playerItem = document.createElement("div");
+        playerItem.classList.add("player-item");
+        playerItem.textContent = "Player 1";
+
+        playerBox.appendChild(playerItem);
+        playerList.appendChild(playerBox);
+
+        playerNameInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                const newName = playerNameInput.value.trim();
+                playerItem.textContent = newName === "" ? "Player 1" : newName;
+                playerNameInput.blur();
+            }
+        });
+    });
+</script>
 
 </html>

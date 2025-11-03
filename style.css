@@ -39,31 +39,41 @@ body {
 
 
 .start-page {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.background {
+    position: absolute;
+    inset: 0;
+    background-image: url("./Image/bg2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     opacity: 0;
     transform: translateX(80px);
     transition: opacity 1s ease-out, transform 1s ease-out;
 }
 
-.start-page.fade-slide-in {
+.content.fade-slide-in {
     opacity: 1;
     transform: translateX(0);
 }
-
-.start-page {
-    padding: 0;
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: hidden;
-    background-image: url("./Image/bg2.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-
 
 
 .Name {
@@ -161,6 +171,7 @@ body {
     align-items: center;
 }
 
+
 .StartGame {
     grid-column: 2 / 3;
     grid-row: 3 / 4;
@@ -169,7 +180,7 @@ body {
     align-items: center;
 }
 
-.StartGame button{
+.StartGame button {
     width: 150px;
     height: 75px;
     margin: 20px;
@@ -181,17 +192,21 @@ body {
     border: none;
     outline: none;
 }
+
 .StartGame button:hover {
     transform: scale(1.1);
     filter: brightness(1.2);
 }
-.MIN1{
+
+.MIN1 {
     background-image: url("./Image/Time/1min.png");
-}   
-.MIN3{
+}
+
+.MIN3 {
     background-image: url("./Image/Time/3min.png");
 }
-.MIN5{
+
+.MIN5 {
     background-image: url("./Image/Time/5min.png");
 }
 
@@ -205,10 +220,11 @@ body {
     gap: 20px;
     justify-items: center;
     align-items: center;
-    padding: 20px;}
+    padding: 20px;
+}
 
 .Avatar button {
-    width: 200px;   
+    width: 200px;
     height: 200px;
     background-size: 1000px 800px;
     background-position: center;
@@ -230,22 +246,27 @@ body {
     filter: brightness(1.4) drop-shadow(0 0 10px yellow);
 }
 
-.Avatar1{
+.Avatar1 {
     background-image: url("./Image/Avatar/avatar1.png");
 }
-.Avatar2{
+
+.Avatar2 {
     background-image: url("./Image/Avatar/avatar2.png");
 }
-.Avatar3{
+
+.Avatar3 {
     background-image: url("./Image/Avatar/avatar3.png");
 }
-.Avatar4{
+
+.Avatar4 {
     background-image: url("./Image/Avatar/avatar4.png");
 }
-.Avatar5{
+
+.Avatar5 {
     background-image: url("./Image/Avatar/avatar5.png");
 }
-.Avatar6{
+
+.Avatar6 {
     background-image: url("./Image/Avatar/avatar6.png");
 }
 
@@ -272,3 +293,51 @@ body {
     background-color: transparent;
     font-weight: bold;
 }
+
+/* 
+.player-item {
+    font-family: "Roboto", sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: #5a2c00;
+    background: rgba(255, 240, 200, 0.9);
+    padding: 15px 30px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 20px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+} */
+
+
+.player-box {
+    width: 80%;
+    height: 80px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-item {
+    font-family: "Roboto", sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: #4a2600;
+}
+
+
+/* ===============================Join=============================== */
+.Join-page {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    background-image: url("./Image/bg2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/* ===================================GamePlay==================================== */
