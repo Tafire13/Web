@@ -73,9 +73,17 @@
         });
     </script>
     <script>
-        document.querySelector(".MIN1").addEventListener("click",()=>{
+        document.querySelectorAll(".MIN1, .MIN3, .MIN5").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const duration = btn.classList.contains("MIN1") ? 1 :
+                    btn.classList.contains("MIN3") ? 3 : 5;
+                socket.emit("startGame", duration);
+            });
+        });
+        socket.on("gameStarted", (duration) => {
+            localStorage.setItem("gameDuration", duration);
             window.location.href = "GamePlay.html";
-        })
+        });
     </script>
 </body>
 

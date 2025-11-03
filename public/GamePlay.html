@@ -4,48 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../public/style.css">
 </head>
 
 <body class="gamePlay-page">
     <div id="stage"></div>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const animals = ["pig", "goose", "wolf", "chick"];
+        const socket = io();
         const stage = document.getElementById("stage");
-        const SAFE_TOP_MIN = 150;
-        const SAFE_TOP_MAX = window.innerHeight - 220;
-        function spawnAnimal() {
-            for (let i = 0; i < 2; i++) {
-                const animal = document.createElement("div");
-                const type = animals[Math.floor(Math.random() * animals.length)];
-                animal.classList.add("animal", type);
-                const y = Math.random() * (SAFE_TOP_MAX - SAFE_TOP_MIN) + SAFE_TOP_MIN;
-                animal.style.top = `${y}px`;
-                const goRight = Math.random() < 0.5;
-                let x = goRight ? -80 : window.innerWidth + 80;
-                const speed = goRight ? 0.6 : -0.6;
 
-                animal.style.left = `${x}px`;
+        function spawnFromServer(batch) {
+            batch.forEach(data => {
+                const wrapper = document.createElement("div");
+                wrapper.classList.add("animal-wrapper");
+                wrapper.style.top = `${data.y}px`;
+                const animal = document.createElement("div");
+                animal.classList.add("animal", data.type);
+                const label = document.createElement("div");
+                label.classList.add("word-label", "float-text");
+                label.textContent = data.word;
+                wrapper.appendChild(label);
+                wrapper.appendChild(animal);
+                stage.appendChild(wrapper);
+                let x = data.goRight ? -80 : window.innerWidth + 80;
+                const speed = data.goRight ? 0.6 : -0.6;
+                wrapper.style.left = `${x}px`;
                 animal.style.animation = `walk 0.8s steps(4) infinite`;
-                if (!goRight) {
+                if (!data.goRight) {
                     animal.style.transform = "scaleX(-1)";
                 }
-                stage.appendChild(animal);
+                if (data.goRight) {
+                    label.style.marginLeft = "0px"; 
+                } else {
+                    label.style.marginLeft = "-20px";
+                }
                 function move() {
                     x += speed;
-                    animal.style.left = `${x}px`;
-                    if ((goRight && x > window.innerWidth + 100) || (!goRight && x < -100)) {
-                        animal.remove();
+                    wrapper.style.left = `${x}px`;
+                    if ((data.goRight && x > window.innerWidth + 100) || (!data.goRight && x < -100)) {
+                        wrapper.remove();
                     } else {
                         requestAnimationFrame(move);
                     }
                 }
-
                 requestAnimationFrame(move);
-            }
+            });
         }
-
-        setInterval(spawnAnimal, 2000);
+        socket.on("spawnAnimal", batch => spawnFromServer(batch));
     </script>
 </body>
 
