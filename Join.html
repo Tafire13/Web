@@ -25,32 +25,32 @@
             </div>
         </div>
     </div>
-</body>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io();
-    const playerList = document.getElementById("playerList");
-    const nameInput = document.getElementById("playerName");
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const playerList = document.getElementById("playerList");
+        const nameInput = document.getElementById("playerName");
 
-    nameInput.addEventListener("keydown", e => {
-        if (e.key === "Enter") {
-            const name = nameInput.value.trim();
-            socket.emit("setName", name || "Player");
-        }
-    });
-
-    socket.on("roomFull", () => {
-        alert("FULL (Max 4 Player)");
-    });
-
-    socket.on("updatePlayers", (players) => {
-        playerList.innerHTML = "";
-        players.forEach(p => {
-            const div = document.createElement("div");
-            div.textContent = p.name;
-            playerList.appendChild(div);
+        nameInput.addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+                const name = nameInput.value.trim();
+                socket.emit("setName", name || "Player");
+            }
         });
-    });
-</script>
+
+        socket.on("roomFull", () => {
+            alert("FULL (Max 4 Player)");
+        });
+
+        socket.on("updatePlayers", (players) => {
+            playerList.innerHTML = "";
+            players.forEach(p => {
+                const div = document.createElement("div");
+                div.textContent = p.name;
+                playerList.appendChild(div);
+            });
+        });
+    </script>
+</body>
 
 </html>

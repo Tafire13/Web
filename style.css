@@ -92,11 +92,11 @@ body {
     align-items: center;
 }
 
-.Button .Host {
+.Button .Start {
     width: 400px;
     height: 140px;
-    background-image: url("./Image/Host.png");
-    background-size: contain;
+    background-image: url("./Image/Start.png");
+    background-size: 400px 300px;
     background-position: center;
     background-repeat: no-repeat;
     background-color: transparent;
@@ -104,29 +104,11 @@ body {
     cursor: pointer;
     margin: 10px;
     transition: 0.3s;
+
 }
 
 
-.Button .Host:hover {
-    transform: scale(1.05);
-    filter: brightness(1.2);
-}
-
-.Button .Join {
-    width: 400px;
-    height: 140px;
-    background-image: url("./Image/Join.png");
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    transition: 0.3s;
-}
-
-.Button .Join:hover {
+.Button .Start:hover {
     transform: scale(1.05);
     filter: brightness(1.2);
 }
@@ -167,8 +149,12 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    padding-top: 120px;
+    box-sizing: border-box;
 }
 
 
@@ -318,11 +304,18 @@ body {
     justify-content: center;
 }
 
+
 .player-item {
     font-family: "Roboto", sans-serif;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: bold;
     color: #4a2600;
+    border-radius: 15px;
+    width: 80%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
@@ -340,4 +333,5 @@ body {
     background-position: center;
     background-repeat: no-repeat;
 }
+
 /* ===================================GamePlay==================================== */
