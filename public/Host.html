@@ -36,13 +36,13 @@
         const socket = io();
         const playerList = document.getElementById("playerList");
         const playerNameInput = document.getElementById("playerName");
-        const startBtn = document.getElementById("startBtn");
         socket.emit("setName", "Player 1");
         playerNameInput.addEventListener("keydown", e => {
             if (e.key === "Enter") {
                 const newName = playerNameInput.value.trim();
                 if (newName !== "") {
                     socket.emit("renamePlayer", newName);
+                    localStorage.setItem("playerName", newName);
                     playerNameInput.blur();
                 }
             }
@@ -55,28 +55,20 @@
                 div.textContent = p.name;
                 playerList.appendChild(div);
             });
-            const me = players.find(p => p.id === socket.id);
-            startBtn.style.display = (me && me.name === "Player 1") ? "block" : "none";
         });
-        startBtn.addEventListener("click", () => {
-            socket.emit("startGame");
-        });
-
-        socket.on("gameStarted", () => {
-            alert("The game has started!");
-        });
-
         socket.on("notAllowed", msg => alert(msg));
-
-        socket.on("roomFull", () => {
-            alert("Room is full! (Max 4 players)");
-        });
-    </script>
-    <script>
+        socket.on("roomFull", () => alert("Room is full! (Max 4 players)"));
         document.querySelectorAll(".MIN1, .MIN3, .MIN5").forEach(btn => {
             btn.addEventListener("click", () => {
-                const duration = btn.classList.contains("MIN1") ? 1 :
-                    btn.classList.contains("MIN3") ? 3 : 5;
+                const duration = btn.classList.contains("MIN1")
+                    ? 1
+                    : btn.classList.contains("MIN3")
+                        ? 3
+                        : 5;
+                const nameInput = document.getElementById("playerName");
+                const playerName = nameInput.value.trim() || "Unknown";
+                localStorage.setItem("playerName", playerName);
+
                 socket.emit("startGame", duration);
             });
         });
@@ -85,6 +77,7 @@
             window.location.href = "GamePlay.html";
         });
     </script>
+
 </body>
 
 </html>

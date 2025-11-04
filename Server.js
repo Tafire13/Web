@@ -8,21 +8,19 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "loading.html"));
-});
 app.use(express.static(__dirname));
-
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "loading.html")));
 
 let players = [];
+let scores = {};
 let wordList = [];
+let activeWords = [];
+
 const wordPath = path.join(__dirname, "public", "wordlist.txt");
 if (fs.existsSync(wordPath)) {
     const text = fs.readFileSync(wordPath, "utf8");
     wordList = text.split(/\r?\n/).filter(Boolean);
-    console.log(`Loaded ${wordList.length} words from wordlist.txt`);
-} else {
-    console.log("wordlist.txt not found!");
+    console.log(`Loaded ${wordList.length} words`);
 }
 
 io.on("connection", (socket) => {
@@ -33,56 +31,81 @@ io.on("connection", (socket) => {
         socket.disconnect();
         return;
     }
-    const playerNumber = players.length + 1;
-    const playerName = `Player ${playerNumber}`;
-    const player = { id: socket.id, name: playerName };
+
+    const player = { id: socket.id, name: `Player ${players.length + 1}` };
     players.push(player);
+    scores[socket.id] = 0;
     io.emit("updatePlayers", players);
 
-    socket.on("renamePlayer", (newName) => {
-        const p = players.find(p => p.id === socket.id);
-        if (p) {
-            p.name = newName || p.name;
+    socket.on("registerPlayerName", (realName) => {
+        const p = players.find((p) => p.id === socket.id);
+        if (p && realName && realName !== "Unknown") {
+            p.name = realName;
             io.emit("updatePlayers", players);
+            socket.emit("nameUpdated", realName);
+            console.log(`Registered name: ${p.name}`);
         }
     });
+
+    socket.on("renamePlayer", (newName) => {
+        const p = players.find((p) => p.id === socket.id);
+        if (p && newName) {
+            p.name = newName;
+            io.emit("updatePlayers", players);
+            console.log(`Renamed to ${p.name}`);
+        }
+    });
+
     socket.on("startGame", (duration) => {
-        const firstPlayer = players[0];
-        if (firstPlayer && socket.id === firstPlayer.id) {
-            console.log(`Game starting in 3 seconds (duration ${duration || "?"} min)`);
+        const first = players[0];
+        if (first && socket.id === first.id) {
             io.emit("gameStarting", duration);
-            setTimeout(() => {
-                io.emit("gameStarted", duration);
-                console.log("Game started for everyone!");
-            }, 3000);
-        } else {
-            socket.emit("notAllowed", "Only Player 1 can start the game!");
+            setTimeout(() => io.emit("gameStarted", duration), 3000);
+        }
+    });
+
+    socket.on("removeAnimal", (word) => {
+        const cleaned = word.trim().toLowerCase();
+        const idx = activeWords.findIndex((w) => w.word === cleaned);
+        if (idx !== -1) {
+            activeWords.splice(idx, 1);
+            scores[socket.id] = (scores[socket.id] || 0) + 1;
+            io.emit("removeAnimal", cleaned);
+            io.emit(
+                "updateScores",
+                players.map((p) => ({
+                    name: p.name,
+                    score: scores[p.id] || 0,
+                }))
+            );
         }
     });
 
     socket.on("disconnect", () => {
-        players = players.filter(p => p.id !== socket.id);
+        players = players.filter((p) => p.id !== socket.id);
+        delete scores[socket.id];
         io.emit("updatePlayers", players);
-        console.log(`Player disconnected. (${players.length}/4 left)`);
+        console.log("Disconnected:", socket.id);
     });
 });
-setInterval(() => {
-    if (wordList.length === 0) return;
 
+setInterval(() => {
+    if (!wordList.length) return;
     const animals = ["pig", "goose", "wolf", "chick"];
     const batch = [];
-
     for (let i = 0; i < 2; i++) {
+        const word = wordList[Math.floor(Math.random() * wordList.length)].trim();
+        if (!word) continue;
         batch.push({
             type: animals[Math.floor(Math.random() * animals.length)],
-            word: wordList[Math.floor(Math.random() * wordList.length)],
+            word,
             y: Math.floor(Math.random() * 400 + 150),
-            goRight: Math.random() < 0.5
+            goRight: Math.random() < 0.5,
         });
+        activeWords.push({ word: word.toLowerCase(), time: Date.now() });
     }
-
     io.emit("spawnAnimal", batch);
 }, 2000);
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on ${PORT}`));

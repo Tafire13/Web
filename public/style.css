@@ -442,3 +442,23 @@ body {
     user-select: none;
     pointer-events: none;
 }
+
+.InputWord {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 60px;
+    font-size: 22px;
+    text-align: center;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    background-image: url("/public/Image/typingBar.png");
+    background-size: 500px 400px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    z-index: 10;
+}
