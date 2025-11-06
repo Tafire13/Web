@@ -15,6 +15,8 @@ let players = [];
 let scores = {};
 let wordList = [];
 let activeWords = [];
+let gameEnded = false;
+let animalSpawnInterval;
 
 const wordPath = path.join(__dirname, "public", "wordlist.txt");
 if (fs.existsSync(wordPath)) {
@@ -59,8 +61,27 @@ io.on("connection", (socket) => {
     socket.on("startGame", (duration) => {
         const first = players[0];
         if (first && socket.id === first.id) {
+            gameEnded = false;
             io.emit("gameStarting", duration);
-            setTimeout(() => io.emit("gameStarted", duration), 3000);
+            setTimeout(() => {
+                io.emit("gameStarted", duration);
+                startAnimalSpawning();
+            }, 3000);
+        }
+    });
+
+    socket.on("gameEnded", () => {
+        if (!gameEnded) {
+            gameEnded = true;
+            stopAnimalSpawning();
+            
+            // ส่งคะแนนสุดท้ายไปยังผู้เล่นทุกคน
+            const finalScores = players.map((p) => ({
+                name: p.name,
+                score: scores[p.id] || 0,
+            }));
+            
+            io.emit("gameOver", finalScores);
         }
     });
 
@@ -89,23 +110,37 @@ io.on("connection", (socket) => {
     });
 });
 
-setInterval(() => {
-    if (!wordList.length) return;
-    const animals = ["pig", "goose", "wolf", "chick"];
-    const batch = [];
-    for (let i = 0; i < 2; i++) {
-        const word = wordList[Math.floor(Math.random() * wordList.length)].trim();
-        if (!word) continue;
-        batch.push({
-            type: animals[Math.floor(Math.random() * animals.length)],
-            word,
-            y: Math.floor(Math.random() * 400 + 150),
-            goRight: Math.random() < 0.5,
-        });
-        activeWords.push({ word: word.toLowerCase(), time: Date.now() });
+function startAnimalSpawning() {
+    if (animalSpawnInterval) {
+        clearInterval(animalSpawnInterval);
     }
-    io.emit("spawnAnimal", batch);
-}, 2000);
+    
+    animalSpawnInterval = setInterval(() => {
+        if (!wordList.length || gameEnded) return;
+        
+        const animals = ["pig", "goose", "wolf", "chick"];
+        const batch = [];
+        for (let i = 0; i < 2; i++) {
+            const word = wordList[Math.floor(Math.random() * wordList.length)].trim();
+            if (!word) continue;
+            batch.push({
+                type: animals[Math.floor(Math.random() * animals.length)],
+                word,
+                y: Math.floor(Math.random() * 400 + 150),
+                goRight: Math.random() < 0.5,
+            });
+            activeWords.push({ word: word.toLowerCase(), time: Date.now() });
+        }
+        io.emit("spawnAnimal", batch);
+    }, 2000);
+}
+
+function stopAnimalSpawning() {
+    if (animalSpawnInterval) {
+        clearInterval(animalSpawnInterval);
+        animalSpawnInterval = null;
+    }
+}
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on ${PORT}`));

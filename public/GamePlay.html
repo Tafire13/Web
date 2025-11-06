@@ -56,6 +56,66 @@
             z-index: 2000;
             transition: opacity 0.5s ease;
         }
+
+        .game-over-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 3000;
+            font-family: Arial, sans-serif;
+        }
+
+        .game-over-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #ffd700;
+        }
+
+        .scoreboard {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            min-width: 400px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            font-size: 24px;
+        }
+
+        .medal {
+            font-size: 32px;
+            margin-right: 15px;
+        }
+
+        .gold { color: #ffd700; }
+        .silver { color: #c0c0c0; }
+        .bronze { color: #cd7f32; }
+
+        .player-name {
+            flex: 1;
+            text-align: left;
+        }
+
+        .player-score {
+            font-weight: bold;
+            color: #ffd700;
+        }
     </style>
 </head>
 
@@ -74,6 +134,7 @@
         let myName = localStorage.getItem("playerName") || "Unknown";
         const duration = parseInt(localStorage.getItem("gameDuration") || "1") * 60;
         let remaining = duration;
+        let gameEnded = false;
         socket.on("connect", () => {
             setTimeout(() => {
                 socket.emit("registerPlayerName", myName);
@@ -111,11 +172,72 @@
             if (remaining > 0) {
                 remaining--;
                 setTimeout(updateTimer, 1000);
-            } else gameTimer.textContent = "TIME UP!";
+            } else {
+                gameTimer.textContent = "TIME UP!";
+                gameEnded = true;
+                socket.emit("gameEnded");
+            }
+        }
+
+        function showGameOverScreen(finalScores) {
+            const overlay = document.createElement("div");
+            overlay.className = "game-over-overlay";
+            
+            const title = document.createElement("div");
+            title.className = "game-over-title";
+            title.textContent = "เกมจบแล้ว!";
+            
+            const scoreboard = document.createElement("div");
+            scoreboard.className = "scoreboard";
+            
+            // เรียงคะแนนจากมากไปน้อย
+            const sortedScores = finalScores.sort((a, b) => b.score - a.score);
+            
+            sortedScores.forEach((player, index) => {
+                const scoreItem = document.createElement("div");
+                scoreItem.className = "score-item";
+                
+                const medal = document.createElement("span");
+                medal.className = "medal";
+                
+                // กำหนดเหรียญตามอันดับ
+                if (index === 0) {
+                    medal.textContent = "🥇";
+                    medal.classList.add("gold");
+                } else if (index === 1) {
+                    medal.textContent = "🥈";
+                    medal.classList.add("silver");
+                } else if (index === 2) {
+                    medal.textContent = "🥉";
+                    medal.classList.add("bronze");
+                } else {
+                    medal.textContent = "🏅";
+                }
+                
+                const playerName = document.createElement("span");
+                playerName.className = "player-name";
+                playerName.textContent = player.name;
+                
+                const playerScore = document.createElement("span");
+                playerScore.className = "player-score";
+                playerScore.textContent = player.score;
+                
+                scoreItem.appendChild(medal);
+                scoreItem.appendChild(playerName);
+                scoreItem.appendChild(playerScore);
+                scoreboard.appendChild(scoreItem);
+            });
+            
+            overlay.appendChild(title);
+            overlay.appendChild(scoreboard);
+            document.body.appendChild(overlay);
         }
         startCountdownAndTimer();
 
         socket.on("spawnAnimal", (batch) => {
+            // หยุดการเกิดสัตว์เมื่อเกมจบแล้ว
+            if (gameEnded) return;
+            
             batch.forEach((data) => {
                 const wrap = document.createElement("div");
                 wrap.classList.add("animal-wrapper");
@@ -144,7 +266,7 @@
         });
 
         input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
+            if (e.key === "Enter" && !gameEnded) {
                 const t = input.value.trim().toLowerCase();
                 if (!t) return;
                 socket.emit("removeAnimal", t);
@@ -172,6 +294,10 @@
             playerList.innerHTML = players
                 .map((p) => `${p.name}: <b>0</b>`)
                 .join("<br>");
+        });
+
+        socket.on("gameOver", (finalScores) => {
+            showGameOverScreen(finalScores);
         });
     </script>
 
