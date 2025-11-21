@@ -116,6 +116,33 @@
             font-weight: bold;
             color: #ffd700;
         }
+
+        .home-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            padding: 15px 30px;
+            background: rgba(255, 215, 0, 0.9);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 3001;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .home-button:hover {
+            background: rgba(255, 215, 0, 1);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.7);
+        }
+
+        .home-button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 
@@ -126,6 +153,39 @@
     <div id="stage"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        // ตรวจสอบว่ามีการโหลดหน้าใหม่หรือไม่
+        const gameSessionKey = "gameInProgress";
+        const pageLoadKey = "pageLoadCount";
+        
+        // นับจำนวนครั้งที่โหลดหน้า
+        let loadCount = parseInt(sessionStorage.getItem(pageLoadKey) || "0");
+        
+        // ถ้าโหลดหน้ามากกว่า 1 ครั้ง (รีเฟรช) ให้กลับหน้า home
+        if (loadCount > 0) {
+            sessionStorage.removeItem(gameSessionKey);
+            sessionStorage.removeItem(pageLoadKey);
+            window.location.href = "/";
+        } else {
+            // เพิ่มจำนวนการโหลด
+            sessionStorage.setItem(pageLoadKey, (loadCount + 1).toString());
+        }
+
+        // ป้องกันการกด F5 และ Ctrl+R
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "F5" || (e.ctrlKey && e.key === "r") || (e.metaKey && e.key === "r")) {
+                e.preventDefault();
+                sessionStorage.removeItem(gameSessionKey);
+                sessionStorage.removeItem(pageLoadKey);
+                window.location.href = "/";
+            }
+        });
+
+        // เมื่อออกจากหน้า ให้ลบ session
+        window.addEventListener("beforeunload", () => {
+            sessionStorage.removeItem(gameSessionKey);
+            sessionStorage.removeItem(pageLoadKey);
+        });
+
         const socket = io();
         const stage = document.getElementById("stage");
         const input = document.querySelector(".InputWord");
@@ -228,9 +288,18 @@
                 scoreboard.appendChild(scoreItem);
             });
             
+            // สร้างปุ่มกลับหน้า home
+            const homeButton = document.createElement("button");
+            homeButton.className = "home-button";
+            homeButton.textContent = "🏠 กลับหน้าหลัก";
+            homeButton.addEventListener("click", () => {
+                window.location.href = "/";
+            });
+            
             overlay.appendChild(title);
             overlay.appendChild(scoreboard);
             document.body.appendChild(overlay);
+            document.body.appendChild(homeButton);
         }
         startCountdownAndTimer();
 

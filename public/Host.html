@@ -74,6 +74,8 @@
         });
         socket.on("gameStarted", (duration) => {
             localStorage.setItem("gameDuration", duration);
+            // ตั้งค่า session ว่ากำลังจะเข้าเกม
+            sessionStorage.setItem("gameInProgress", "true");
             window.location.href = "GamePlay.html";
         });
     </script>
